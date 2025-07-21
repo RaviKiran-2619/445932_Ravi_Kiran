@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TO-DO MANAGER</title>
+</head>
+<body>
+
+    <div class="form-section">
+        <label>Date:</label>
+        <input type="date" id="date"><br><br>
+
+        <label>Enter TO-DO Item Description:</label>
+        <input type="text" id="description"><br><br>
+
+        <label>Enter Target Date and Time:</label>
+        <input type="datetime-local" id="target"><br><br>
+
+        <label>Status:</label>
+        <input type="text" id="status"><br><br>
+
+        <button onclick="addTodo()">SUBMIT</button><br><br>
+    </div>
+
+    <table border="4" id="todoTable">
+        <tr>
+            <th>TO-DO ID</th>
+            <th>TO-DO ITEM</th>
+            <th>TARGET DATE TIME</th>
+            <th>STATUS</th>
+        </tr>
+        <!-- New rows will be added here -->
+    </table>
+
+    <script>
+        let todoId = 1;
+
+        function addTodo() {
+            // Get input values
+            let description = document.getElementById("description").value;
+            let target = document.getElementById("target").value;
+            let status = document.getElementById("status").value;
+
+            // Simple validation
+            if (description === "" || target === "" || status === "") {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            // Get the table
+            let table = document.getElementById("todoTable");
+
+            // Insert a new row at the end
+            let newRow = table.insertRow();
+
+            // Insert cells
+            newRow.insertCell(0).innerText = todoId++; // Auto-increment ID
+            newRow.insertCell(1).innerText = description;
+            newRow.insertCell(2).innerText = target;
+            newRow.insertCell(3).innerText = status;
+
+            // Clear inputs
+            document.getElementById("description").value = "";
+            document.getElementById("target").value = "";
+            document.getElementById("status").value = "";
+        }
+    </script>
+
+</body>
+</html>
