@@ -6,19 +6,27 @@
 <body>
 
     <div class="form-section">
-        <label>Date:</label>
-        <input type="date" id="date"><br><br>
+        <form>
+    <label>Date:</label>
+    <input type="date" id="date"><br><br>
 
-        <label>Enter TO-DO Item Description:</label>
-        <input type="text" id="description"><br><br>
+    <label>Enter TO-DO Item Description:</label>
+    <input type="text" id="description"><br><br>
 
-        <label>Enter Target Date and Time:</label>
-        <input type="datetime-local" id="target"><br><br>
+    <label>Enter Target Date and Time:</label>
+    <input type="datetime-local" id="target"><br><br>
 
-        <label>Status:</label>
-        <input type="text" id="status"><br><br>
+    <label>Status:</label>
+    <select id="status" required>
+        <option value="">--Select Status--</option>
+        <option value="Not Started">Not Started</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </select><br><br>
 
-        <button onclick="addTodo()">SUBMIT</button><br><br>
+    <button onclick="addTodo()">SUBMIT</button><br><br>
+</form>
+
     </div>
 
     <table border="4" id="todoTable">
@@ -32,38 +40,39 @@
     </table>
 
     <script>
-        let todoId = 1;
+    var todoId = 1;
 
-        function addTodo() {
-            // Get input values
-            let description = document.getElementById("description").value;
-            let target = document.getElementById("target").value;
-            let status = document.getElementById("status").value;
+    function addTodo() {
+        var description = document.getElementById("description").value;
+        var target = document.getElementById("target").value;  // e.g., "2025-07-21T21:36"
+        var status = document.getElementById("status").value;
 
-            // Simple validation
-            if (description === "" || target === "" || status === "") {
-                alert("Please fill in all fields.");
-                return;
-            }
-
-            // Get the table
-            let table = document.getElementById("todoTable");
-
-            // Insert a new row at the end
-            let newRow = table.insertRow();
-
-            // Insert cells
-            newRow.insertCell(0).innerText = todoId++; // Auto-increment ID
-            newRow.insertCell(1).innerText = description;
-            newRow.insertCell(2).innerText = target;
-            newRow.insertCell(3).innerText = status;
-
-            // Clear inputs
-            document.getElementById("description").value = "";
-            document.getElementById("target").value = "";
-            document.getElementById("status").value = "";
+        if (description == "" || target == "" || status == "") {
+            alert("Please fill in all fields.");
+            return;
         }
-    </script>
+
+        // Format target date-time using split
+        var [datePart, timePart] = target.split("T"); // "2025-07-21", "21:36"
+        var [year, month, day] = datePart.split("-"); // "2025", "07", "21"
+        var formattedTarget = `${day}-${month}-${year} ${timePart}`; // "21-07-2025 21:36"
+
+        // Add to table
+        var table = document.getElementById("todoTable");
+        var newRow = table.insertRow();
+
+        newRow.insertCell(0).innerText = todoId++;
+        newRow.insertCell(1).innerText = description;
+        newRow.insertCell(2).innerText = formattedTarget;
+        newRow.insertCell(3).innerText = status;
+
+        // Clear inputs
+        document.getElementById("description").value = "";
+        document.getElementById("target").value = "";
+        document.getElementById("status").value = "";
+    }
+</script>
+
 
 </body>
 </html>
