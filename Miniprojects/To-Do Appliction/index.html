@@ -1,78 +1,113 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>TO-DO MANAGER</title>
+  <title>TO-DO MANAGER</title>
 </head>
 <body>
-
-    <div class="form-section">
-        <form>
+  <div class="form-section">
     <label>Date:</label>
-    <input type="date" id="date"><br><br>
+    <input type="date" id="date" /><br /><br />
 
     <label>Enter TO-DO Item Description:</label>
-    <input type="text" id="description"><br><br>
+    <input type="text" id="description" /><br /><br />
 
     <label>Enter Target Date and Time:</label>
-    <input type="datetime-local" id="target"><br><br>
+    <input type="datetime-local" id="target" /><br /><br />
 
     <label>Status:</label>
     <select id="status" required>
-        <option value="">--Select Status--</option>
-        <option value="Not Started">Not Started</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Completed">Completed</option>
-    </select><br><br>
+      <option value="">--Select Status--</option>
+      <option value="Not Started">Not Started</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select><br /><br />
 
-    <button onclick="addTodo()">SUBMIT</button><br><br>
-</form>
+    <button onclick="addTodo()">SUBMIT</button><br /><br />
+  </div>
 
-    </div>
+  <table border="4" id="todoTable">
+    <tr>
+      <th>TO-DO ID</th>
+      <th>TO-DO ITEM</th>
+      <th>TARGET DATE TIME</th>
+      <th>STATUS</th>
+      <th>ACTION</th>
+    </tr>
+  </table>
 
-    <table border="4" id="todoTable">
-        <tr>
-            <th>TO-DO ID</th>
-            <th>TO-DO ITEM</th>
-            <th>TARGET DATE TIME</th>
-            <th>STATUS</th>
-        </tr>
-        <!-- New rows will be added here -->
-    </table>
+  <script>
+    let todoId = 1;
 
-    <script>
-    var todoId = 1;
+    // Set today's date and time as the min value
+    function setMinDateTime() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+
+      const todayDate = `${yyyy}-${mm}-${dd}`;
+      const currentDateTime = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+
+      document.getElementById("date").min = todayDate;
+      document.getElementById("target").min = currentDateTime;
+    }
+
+    window.onload = setMinDateTime;
 
     function addTodo() {
-        var description = document.getElementById("description").value;
-        var target = document.getElementById("target").value;  // e.g., "2025-07-21T21:36"
-        var status = document.getElementById("status").value;
+      const description = document.getElementById("description").value;
+      const target = document.getElementById("target").value;
+      const status = document.getElementById("status").value;
 
-        if (description == "" || target == "" || status == "") {
-            alert("Please fill in all fields.");
-            return;
-        }
+      if (!description || !target || !status) {
+        alert("Please fill in all fields.");
+        return;
+      }
 
-        // Format target date-time using split
-        var [datePart, timePart] = target.split("T"); // "2025-07-21", "21:36"
-        var [year, month, day] = datePart.split("-"); // "2025", "07", "21"
-        var formattedTarget = `${day}-${month}-${year} ${timePart}`; // "21-07-2025 21:36"
+      const [datePart, timePart] = target.split("T");
+      const [year, month, day] = datePart.split("-");
+      const formattedTarget = `${day}-${month}-${year} ${timePart}`;
 
-        // Add to table
-        var table = document.getElementById("todoTable");
-        var newRow = table.insertRow();
+      const table = document.getElementById("todoTable");
+      const newRow = table.insertRow();
 
-        newRow.insertCell(0).innerText = todoId++;
-        newRow.insertCell(1).innerText = description;
-        newRow.insertCell(2).innerText = formattedTarget;
-        newRow.insertCell(3).innerText = status;
+      newRow.insertCell(0).innerText = todoId++;
+      newRow.insertCell(1).innerText = description;
+      newRow.insertCell(2).innerText = formattedTarget;
 
-        // Clear inputs
-        document.getElementById("description").value = "";
-        document.getElementById("target").value = "";
-        document.getElementById("status").value = "";
+      const statusCell = newRow.insertCell(3);
+      statusCell.innerText = status;
+
+      // ACTION buttons
+      const actionCell = newRow.insertCell(4);
+
+      const btnNotStarted = document.createElement("button");
+      btnNotStarted.innerText = "Not Started";
+      btnNotStarted.onclick = () => statusCell.innerText = "Not Started";
+
+      const btnInProgress = document.createElement("button");
+      btnInProgress.innerText = "In Progress";
+      btnInProgress.onclick = () => statusCell.innerText = "In Progress";
+
+      const btnCompleted = document.createElement("button");
+      btnCompleted.innerText = "Completed";
+      btnCompleted.onclick = () => statusCell.innerText = "Completed";
+
+      actionCell.appendChild(btnNotStarted);
+      actionCell.appendChild(document.createTextNode(" ")); // space
+      actionCell.appendChild(btnInProgress);
+      actionCell.appendChild(document.createTextNode(" ")); // space
+      actionCell.appendChild(btnCompleted);
+
+      // Clear inputs
+      document.getElementById("description").value = "";
+      document.getElementById("target").value = "";
+      document.getElementById("status").value = "";
+
+      setMinDateTime(); // refresh min datetime
     }
-</script>
-
-
+  </script>
 </body>
 </html>
