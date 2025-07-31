@@ -80,28 +80,39 @@
       const statusCell = newRow.insertCell(3);
       statusCell.innerText = status;
 
-      // ACTION buttons
       const actionCell = newRow.insertCell(4);
 
-      const btnNotStarted = document.createElement("button");
-      btnNotStarted.innerText = "Not Started";
-      btnNotStarted.onclick = () => statusCell.innerText = "Not Started";
+      // Create dropdown menu for action/status update
+      const select = document.createElement("select");
 
-      const btnInProgress = document.createElement("button");
-      btnInProgress.innerText = "In Progress";
-      btnInProgress.onclick = () => statusCell.innerText = "In Progress";
+      // Add default option
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.text = "--Select Status--";
+      select.appendChild(defaultOption);
 
-      const btnCompleted = document.createElement("button");
-      btnCompleted.innerText = "Completed";
-      btnCompleted.onclick = () => statusCell.innerText = "Completed";
+      const statuses = ["Not Started", "In Progress", "Completed"];
 
-      actionCell.appendChild(btnNotStarted);
-      actionCell.appendChild(document.createTextNode(" ")); // space
-      actionCell.appendChild(btnInProgress);
-      actionCell.appendChild(document.createTextNode(" ")); // space
-      actionCell.appendChild(btnCompleted);
+      statuses.forEach(st => {
+        const option = document.createElement("option");
+        option.value = st;
+        option.text = st;
+        if (st === status) {
+          option.selected = true; // preselect current status
+        }
+        select.appendChild(option);
+      });
 
-      // Clear inputs
+      // On change, update status cell
+      select.onchange = () => {
+        if (select.value) {
+          statusCell.innerText = select.value;
+        }
+      };
+
+      actionCell.appendChild(select);
+
+      // Clear input fields after adding
       document.getElementById("description").value = "";
       document.getElementById("target").value = "";
       document.getElementById("status").value = "";
